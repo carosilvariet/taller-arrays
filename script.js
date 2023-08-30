@@ -1,42 +1,33 @@
-// Array extraño
-const strangeArray = [
-  "Zero",
-  function () {
-    alert("Hola soy una función en un array");
-  },
-  22,
-  null,
-  "Go lang",
-  undefined,
-  "Cobol",
-  "I'm programmer",
-  -2000,
-  "Hello world",
-  `One is ${1}`,
-  { name: "Info", lastname: "last info" },
-  () => true,
-  function showNumbers() {
-    return "1, 2, 3, 4";
-  },
-  "Another String",
-  ["Hola mundo!"],
-  "b is a letter",
-  "JavaScript",
-];
+const URL = "data.json";
+const listContainer = document.getElementById("list");
 
-// Función que recibe por parámetro un array y muestra sus elementos en pantalla
-function showList(array) {
-  const container = document.getElementById("list");
-  container.innerHTML = "";
-  // Más info de forEach => https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
-  array.forEach((element) => {
-    const li = document.createElement("li");
-    li.appendChild(document.createTextNode(element));
-    container.appendChild(li);
-  });
+function showData(data) {
+  let htmlContentToAppend = "";
+
+  for (const pepe of data) {
+    htmlContentToAppend += `<li>${pepe.title}</li>`;
+  }
+
+  listContainer.innerHTML = htmlContentToAppend;
 }
 
-document.addEventListener("DOMContentLoaded", (e) => {
-  // Escribe tu solución aquí
-  // Sugerencia de cómo mostrar el array => showList(strangeArray);
+async function fetchData() {
+  try {
+    const response = await fetch(URL);
+    const data = await response.json();
+
+    // Filtrar elementos con precio menor a 100
+    const filteredData = data.filter(element => element.price < 100);
+
+    // Ordenar elementos por precio de mayor a menor
+    filteredData.sort((a, b) => b.price - a.price);
+
+    showData(filteredData);
+  } catch (error) {
+    alert("¡Hubo un error al cargar los datos!");
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  fetchData();
 });
